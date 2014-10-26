@@ -1,0 +1,150 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{hyperref}
+\usepackage[utf8]{inputenc}
+
+\title{{\textbf{Desenvolvimento de software para análise da tribo Enawene-nawe}}}
+\author{\LARGE Ruan de Menezes Costa}
+\date{}
+
+\pdfinfo{%
+  /Title    (Desenvolvimento de software para análise da tribo Enawene-nawe)
+  /Author   (Ruan de Menezes Costa)
+  /Creator  (Ruan de Menezes Costa)
+  /Producer (Ruan de Menezes Costa)
+  /Subject  ()
+  /Keywords (Software Enawene-nawe grafos visualização consultas)
+}
+
+\begin{document}
+\maketitle
+\begin{center}
+
+  {\scshape \huge Projeto de Iniciação Científica
+	\\apresentado ao
+\\Instituto de Matemática e Estatística
+	     \\da
+    \\Universidade de São Paulo
+	    \\para
+      \\obtenção de bolsa
+	    \\do
+\\Conselho Nacional de Desenvolvimento 
+     \\Científico e Tecnológico
+	   \\(CNPq)}
+	   \bigskip
+	   \bigskip
+	   \bigskip
+  \\{\LARGE Orientador: Carlos Eduardo Ferreira}
+  
+\end{center}
+\newpage
+
+\section{Introdução}
+Um problema muito interessante em Antropologia é o estudo do
+parentesco. É comumente aceito na área que as relações de parentesco
+não se baseiam apenas em aspectos biológicos, uma vez que dependendo
+da cultura observada elas variam enormemente. os primeiros estudos da
+área já têm mais de 150 anos \cite{Morgan}. Uma interessante
+observação sobre parentesco é a chamada \textbf{teoria da aliança}
+desenvolvida pelo antropológo Claude Lévi-Strauss
+\cite{LeviStrauss}. Nela o antropólogo propõe que os casamentos
+ocorrem na sociedade como objetos de troca entre as famílias, a fim de
+que estas possam escapar do tabu do incesto, presente em todas as
+sociedades conhecidas. Assim, \textbf{regras de troca} surgem como
+naturais, ou, até mesmo, prescritas na sociedade, como, por exemplo, a
+chamada \textbf{troca de irmãos}, em que dois irmãos casam-se com duas
+irmãs. 
+
+O estudo destes objetos nas genealogias deu origem ao uso de grafos
+para representar o parentesco \cite{Ore}. Neles os vértices são os
+membros da comunidade e os arcos podem representar relação de filiação
+ou casamento. Problemas em algoritmos em grafos (como
+busca de ancestral comum mais próximo, junções, etc) têm interessantes
+aplicações no estudo do parentesco, como vemos em \cite{Marcio,
+  Alvaro}. 
+
+Do interesse dos antropólogos Márcio Ferreira da Silva e João Dal Poz
+Neto \cite{Marcio}
+em estudar as relações de parentesco na tribo Enawene-nawe, 
+surgiu a necessidade da criação de um software para facilitar esta
+tarefa. Várias tarefas realizadas pelos antropólogos em seus estudos
+de campo podem ser facilitadas com o apoio computacional. Um exemplo
+disso é a consulta sobre as relações de consanguinidade de duas
+pessoas. Essas relações variam de sociedade para sociedade, e também
+no tempo, de acordo  com acontecimentos como casamentos e mortes. O
+estudo desta nomenclatura e sua evolução no tempo pode ser feito com o
+uso de algoritmos em grafos, e é um dos principais objetos de estudo
+deste projeto. 
+\section{Objetivos}
+O projeto tem por objetivo a criação de um software para a visualização e análise de dados extraídos da tribo Enawene-nawe.
+O usuário poderá verificar, por exemplo, qual é a relação de parentesco entre dois indíviduos dentro da comunidade, além de prover fácil acesso às suas características.
+Também será possível escolher um ano como critério de seleção (para se saber como era a estrutura da tribo em determinado ano), dessa maneira, 
+será possível analisar a evolução das relações de parentesco dos
+habitantes da comunidade ao longo do tempo. Também é de interesse expor o digrafo de maneira apropriada, tornando sua análise mais fácil.
+
+\section{Metodologia}
+O software será desenvolvido na linguagem de programação Java. 
+A entrada do programa é um arquivo texto que descreve as características dos indivíduos
+(número de identificação, pai, mãe, data de nascimento, data de morte, casamento).
+A comunidade será modelada por um digrafo, onde cada indivíduo é um nó e as relações de parentesco e matrimônio são arcos.
+Será usada a biblioteca GraphStream \cite{graphstream} para a manipulação e exibição do digrafo.
+Para a visuallização, será tomado como base o framework de Sugyama \cite{sugiyama02}, que consiste em 3 passos para otimizar o layout de um grafo dirigido acíclico.
+\begin{enumerate}
+  \item Separação dos nós do digrafo por camadas. Isto pode ser conseguido por meio de vários algoritmos, como por exemplo, Coffman-Graham \cite{coffman} e Longest-path.
+  \item Organização dos nós dentro da camada. Etapa necessária para diminuir o número de cruzamento de arcos. Será feita por meio de heurísticas como o método da mediana ou do baricentro.
+  \item Designação das coordenadas para os nós. Além da ordem dos
+    vértices, a posição dentro da camada também pode prejudicar o
+    layout do digrafo. Será usado o método de Brandes e Köpf
+    \cite{brandes02}, entre outros. 
+\end{enumerate}
+ Para as consultas, será feito um pré-processamento utilizando-se algoritmos elementares de dígrafos, como busca em profundidade, para a determinar a relação dos indíviduos dois a dois.
+\begin{thebibliography}{9}
+
+ \bibitem{brandes02}
+  Ulrik Brandes, and Boris Köpf. \emph{Fast and simple horizontal coordinate assignment}.
+  Graph Drawing. Springer Berlin Heidelberg, 2002.
+  
+  \bibitem{coffman}
+   E.G. Coffman Jr, and Ronald L. Graham. 
+  \emph{Optimal scheduling for two-processor systems}. 
+  Acta Informatica 1.3 (1972): 200-213.
+
+\bibitem{Alvaro}
+Alvaro Junio Pereira Franco, \emph{Algorithms for junctions in acycli
+  digraphs and an application in Antropology}, Ph.D. Thesis,
+University of São Paulo. 
+
+ \bibitem{graphstream}
+  GraphStream,
+  2010-2013.
+  URL:\url{http://graphstream-project.org/}
+
+\bibitem{LeviStrauss}
+Claude Lévi-Strauss, 
+\emph{Les structures élémentaires de la parenté}, Mouton, Paris, 1967.
+
+ \bibitem{Morgan}
+ Lewis Henry Morgan, 
+\emph{Systems of consanguinity and affinity of the human family},
+University of Nebrasca Press, 1870. 
+
+\bibitem{Ore}
+Oystein Ore, 
+\emph{Sex in graphs}, Proceedings of the American Mathematical
+Society, 533--539, 1960. 
+
+\bibitem{Marcio}
+Marcio Ferreira da Silva and João dal Poz, 
+\emph{Maqpar: a homemade tool for the study of kinship networks},
+Vibrant 6(2), 29--51, 2009. 
+
+ \bibitem{sugiyama02}
+ Kozo Sugiyama, Shojiro Tagawa, and Mitsuhiko Toda.
+  \emph{Methods for visual understanding of hierarchical system structures}.
+  Systems, Man and Cybernetics,
+  IEEE Transactions on 11.2 (1981): 109-125.
+
+\end{thebibliography}
+
+\end{document}
