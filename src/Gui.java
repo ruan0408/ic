@@ -10,6 +10,7 @@ import java.awt.event.*;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
 
+
 public class Gui extends JFrame 
 {	
 	private static final long serialVersionUID = 1L;
@@ -27,7 +28,7 @@ public class Gui extends JFrame
 	String[][] relations;
 	IndioSingleGraph graph;
 	
-	public Gui()
+	public Gui() throws Exception
 	{
 		super("Projeto dos índios");
 		inputFilePath = null;
@@ -79,11 +80,18 @@ public class Gui extends JFrame
 		mainPanel.add(options);
 		
 		this.add(mainPanel);
+		
+		
+		/*graph.addNodesFromFilePath("/home/ruan0408/workspace/Indios/EN-31jul2011-individuos-g-(com-cla).txt");
+		graph.addMarriagesFromFilePath("/home/ruan0408/workspace/Indios/EN-31jul2011-casamentos-g.txt");
+		graph.computeRelations();
+		graph.getRelation(1007, 1668);*/
+		System.out.println("fim");
 		/* ******************************************/
 		
 		/* ************ JFRAME ************************/
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);		
+		//this.setVisible(true);		
 		this.pack();
 		/* ******************************************/
 		

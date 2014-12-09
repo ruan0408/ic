@@ -164,7 +164,7 @@ public class MyToolkit extends Toolkit
 			Node one = edge.getTargetNode();
 			
 			if((int)one.getAttribute("maxPathLength") - (int)zero.getAttribute("maxPathLength") > 1)
-				System.out.println("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+				System.out.println("Dummy nodes are wrong!!");
 		}
 	}
 }

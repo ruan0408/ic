@@ -27,13 +27,15 @@ class MarriageHandler implements ActionListener
 			
 			if(resp == JFileChooser.APPROVE_OPTION)
 			{
-				this.gui.inputFilePath = chooser.getSelectedFile().getAbsolutePath();
+				//this.gui.inputFilePath = chooser.getSelectedFile().getAbsolutePath();
+				this.gui.inputFilePath = "/home/ruan0408/workspace/Indios/EN-31jul2011-casamentos-g.txt";
 				try
 				{
 					this.gui.graph.addMarriagesFromFilePath(this.gui.inputFilePath);
 				}
 				catch(Exception e)
 				{
+					e.printStackTrace(System.out);
 					System.out.println("Arquivo de casamento não existe");
 				}
 			}

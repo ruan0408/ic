@@ -27,7 +27,8 @@ class InputFileHandler implements ActionListener
 			
 			if(resp == JFileChooser.APPROVE_OPTION)
 			{
-				this.gui.inputFilePath = chooser.getSelectedFile().getAbsolutePath();
+				//this.gui.inputFilePath = chooser.getSelectedFile().getAbsolutePath();
+				this.gui.inputFilePath  = "/home/ruan0408/workspace/Indios/EN-31jul2011-individuos-g-(com-cla).txt";
 				try
 				{
 					this.gui.graph.addNodesFromFilePath(this.gui.inputFilePath);
@@ -36,7 +37,7 @@ class InputFileHandler implements ActionListener
 				{
 					System.out.println("File does not exist");
 				}
-				this.gui.graph.performLayoutAlgorithm();
+				//this.gui.graph.performLayoutAlgorithm();
 			}
 		}
 		

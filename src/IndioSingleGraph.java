@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.*;
 
 import org.graphstream.graph.Edge;
@@ -12,14 +11,19 @@ import org.graphstream.graph.implementations.SingleGraph;
 
 public class IndioSingleGraph extends SingleGraph 
 {
-	String[][] relations;//diz  relations[a][b] diz "o que b é de a"
+	String[][] relations;//relations[ego][alter] diz o que o alter é para o ego (como o ego chama o alter)
 	
 	public IndioSingleGraph(String id) 
 	{
 		super(id);
+		super.setStrict(false);
 	}
 	
-	public void setRelations(int tam){this.relations = new String[tam][tam];}
+	public void setRelations(int tam){
+		this.relations = new String[tam+1][tam+1];
+		for (String[] row: this.relations)
+		    Arrays.fill(row, "");
+	}
 	
 	public void computeRelations()
 	{
@@ -34,9 +38,10 @@ public class IndioSingleGraph extends SingleGraph
 		//para cada indivuduo
 		while(it.hasNext())
 		{
-			System.out.println("AEUEHAUEHAUEHUAHE");
+			//System.out.println("NOVO INDIVIDUO");
 			ego = it.next();		//não mexa nesse cara, vc vai usar ele em todas as addRelation
 			queue = constructAxis(ego);
+			//System.out.println("EIXO COMPLETO");
 			
 			while(!queue.isEmpty()) //calculate upper relations
 			{
@@ -47,11 +52,18 @@ public class IndioSingleGraph extends SingleGraph
 				{
 					edge = it2.next();
 					aux = new LinkedList<Node>();
+					
+					//esposo não vale
 					if(!edge.isDirected()) continue;
 					alter = edge.getOpposite(noEixo);
 					
+					//Não desça pelo mesmo caminho que vc subiu
+					if(noEixo != ego &&
+							noEixo.getAttribute("cameFrom").equals(alter.getId())) continue;
+						
+					
 					if(noEixo == ego || 
-						noEixo.getAttribute("comeFrom").toString().equals(alter.getAttribute("sexo").toString()))
+						noEixo.getAttribute("cameFromSex").toString().equals(alter.getAttribute("sexo").toString()))
 						cruzado = false;
 					else
 						cruzado = true;
@@ -63,8 +75,8 @@ public class IndioSingleGraph extends SingleGraph
 					{
 						alter = aux.removeLast();
 						
-						if((int)alter.getAttribute("nivel") <= -2) break;
-						if(alter != ego) classify_relatives(ego, alter, cruzado);
+						if((int)alter.getAttribute("nivel") < -2) break;
+						if(alter != ego) classifyRelatives(ego, alter, cruzado);
 						
 						it3 = alter.getLeavingEdgeIterator();
 						while(it3.hasNext())
@@ -79,46 +91,11 @@ public class IndioSingleGraph extends SingleGraph
 					}
 				}
 			}
+			this.cleanNodes();
 		}
 	}
 
-	public void getRelation(int ego, int alter){
-		
-		System.out.println(relations[ego][alter]);
-	}
-	//incomplete...
-	private void findNerani(Node ego)
-	{
-		Node hus, father;
-		hus = null;
-		Iterator<Edge> it = ego.getEdgeIterator();
-		Edge e;
-		
-		if(!ego.getAttribute("sexo").toString().equals("f"))
-			return;
-		
-		while(it.hasNext())
-		{
-			e = it.next();
-			if(!e.isDirected())
-			{
-				hus = e.getOpposite(ego);
-				this.addRelation(ego, hus, "nerani");
-				
-				it = hus.getEnteringEdgeIterator();
-				while(it.hasNext())
-				{
-					e = it.next();
-					if(e.getOpposite(hus).getAttribute("sexo").toString().equals("m"))
-						father = e.getOpposite(hus);
-					
-				}
-			}
-				
-		}
-	}
-	private void classify_relatives(Node ego, Node alter, boolean cruzado) 
-	{System.out.println("AEUEHAUEHAUEHUAHEAAAAAAAAAAAAAAAA");
+	private void classifyRelatives(Node ego, Node alter, boolean cruzado) {
 		switch((int)alter.getAttribute("nivel"))
 		{
 			case -2:
@@ -164,8 +141,14 @@ public class IndioSingleGraph extends SingleGraph
 					}
 					else
 					{
-						if(cruzado)
-							this.addRelation(ego, alter, "noheroĩ");
+						if(cruzado) {
+							if(ego.getAttribute("sexo").equals("m"))
+								this.addRelation(ego, alter, "noheroĩ");
+							else if(this.isOlderThan(ego, alter))
+								this.addRelation(ego, alter, "yowa-re");
+							else
+								this.addRelation(ego, alter, "yoya-re");
+						}
 						else
 						{
 							if(this.isOlderThan(alter,  ego))
@@ -196,7 +179,8 @@ public class IndioSingleGraph extends SingleGraph
 					this.addRelation(ego, alter, "ahi-ro");
 				break;
 			default:
-				System.out.println("Shouldn't happen");
+				if((int)alter.getAttribute("nivel") != 4)
+					System.out.println("Shouldn't happen");
 		}
 	}
 	
@@ -225,34 +209,82 @@ public class IndioSingleGraph extends SingleGraph
 				if(!edge.isDirected()) continue;
 				
 				alter = edge.getOpposite(viz);
-				alter.addAttribute("cameFrom", viz.getAttribute("sexo"));
+				//if(viz.getAttribute("sexo") == null) System.out.println("sexo nulo no construct axis");
+				//if(viz.getAttribute("nivel") == null) System.out.println("nivel nulo no construct axis");
+				alter.addAttribute("cameFromSex", viz.getAttribute("sexo"));
+				//if(viz.getId() == null) System.out.println("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+				alter.addAttribute("cameFrom", viz.getId());
+				if(alter.getAttribute("cameFrom") == null)
+					System.out.println("lalalla");
 				alter.setAttribute("nivel", (int)viz.getAttribute("nivel") + 1);
 				
-				classify_relatives(ego, alter, false);//ancestors are parallel by definition
+				classifyRelatives(ego, alter, false);//ancestors are parallel by definition
 				
+				if(alter.getAttribute("cameFrom") == null)
+					System.out.println("lalalla");
 				eixo.add(alter);
 				aux.add(alter);
-				/*switch((int)alter.getAttribute("nivel"))
-				{
-					case 1:
-						if(alter.getAttribute("sexo").toString().equals("m"))
-							addRelation(ego, alter, "haha-re");
-						else
-							addRelation(ego, alter, "mama-lo");
-						break;
-					default:
-						if(alter.getAttribute("sexo").toString().equals("m"))
-							addRelation(ego, alter, "ato-re");
-						else
-							addRelation(ego, alter, "ahi-ro");
-				}*/
 			}
 		}
 		return eixo;
 	}
-	 //returns true if n1 is older than n2, false otherwise
+	
+	//incomplete...
+	private void findNerani(Node ego)
+	{
+		Node hus, father;
+		hus = null;
+		Iterator<Edge> it = ego.getEdgeIterator();
+		Edge e;
+		
+		if(!ego.getAttribute("sexo").toString().equals("f"))
+			return;
+		
+		while(it.hasNext())
+		{
+			e = it.next();
+			if(!e.isDirected())
+			{
+				hus = e.getOpposite(ego);
+				this.addRelation(ego, hus, "nerani");
+				
+				it = hus.getEnteringEdgeIterator();
+				while(it.hasNext())
+				{
+					e = it.next();
+					if(e.getOpposite(hus).getAttribute("sexo").toString().equals("m"))
+						father = e.getOpposite(hus);
+					
+				}
+			}
+				
+		}
+	}
+	
+	private void cleanNodes(){
+		Iterator<Node> it = this.getNodeIterator();
+		Node n;
+		while(it.hasNext()){
+			n = it.next();
+			n.removeAttribute("cameFromSex");
+			n.removeAttribute("cameFrom");
+			n.removeAttribute("nivel");
+		}
+	}
+	 
+	public String getRelation(int ego, int alter){
+		String resp = "";
+		HashSet<String> h = new HashSet<String>(Arrays.asList(relations[ego][alter].split(" ")));
+		for(String token : h.toArray(new String[0]))
+			resp = token+""+resp;
+		return resp;
+	}
+	//returns true if n1 is older than n2, false otherwise
 	private boolean isOlderThan(Node n1, Node n2)
 	{
+		if((int)n1.getAttribute("dataNascimento") > (int)n2.getAttribute("dataNascimento"))
+			return false;
+		
 		return true;
 	}
 	private void addRelation(Node ego, Node alter, String relation)
@@ -290,66 +322,73 @@ public class IndioSingleGraph extends SingleGraph
 			l.setCoordinates();
 		for(Layer l : layers)
 			l.sortVertices();
-		for(Iterator<Node> nodes = this.getNodeIterator(); nodes.hasNext();)
+		/*for(Iterator<Node> nodes = this.getNodeIterator(); nodes.hasNext();)
 		{
 			Node n = nodes.next();
 			System.out.println(n.getAttribute("x"));
-		}
+		}*/
 	}
 	
-	public void addMarriagesFromFilePath(String inputFilePath) throws Exception
-	{
-		BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
-		String line = null;
-		String[] s = null;
-		int numCas = Integer.parseInt(reader.readLine());
-		
-		for(int i = 0; i < numCas; i++)
-		{
-			line = reader.readLine();
-			s = line.split("\\s+");
-										
-			this.addNode(s[0]);//cria ou retorna o homem
-			this.addNode(s[1]);//cria ou retorna a mulher
-			Edge e = this.addEdge(s[0]+" "+s[1], s[0], s[1], false);
-			e.addAttribute("data_cas", Integer.parseInt(s[2]));
-			e.addAttribute("ui.hide");
+	public void addMarriagesFromFilePath(String inputFilePath) {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
+			String line = null;
+			String[] s = null;
+			int numCas = Integer.parseInt(reader.readLine());
+			
+			for(int i = 0; i < numCas; i++)
+			{
+				line = reader.readLine();
+				s = line.split("\\s+");
+											
+				this.addNode(s[0]);//cria ou retorna o homem
+				this.addNode(s[1]);//cria ou retorna a mulher
+				Edge e = this.addEdge(s[0]+" "+s[1], s[0], s[1], false);
+				e.addAttribute("data_cas", Integer.parseInt(s[2]));
+				e.addAttribute("ui.hide");
+			}
+			reader.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
-		reader.close();
 	}
-	public void addNodesFromFilePath(String inputFilePath) throws Exception
-	{
-		BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
-		String line = null;
-		String[] s = null;
-		int numInd = Integer.parseInt(reader.readLine());
-		int maxId = 0;
-		
-		for(int i = 0; i < numInd; i++)
-		{
-			line = reader.readLine();
-			s = line.split("\\s+");
-			if(Integer.parseInt(s[0]) > maxId) maxId = Integer.parseInt(s[0]);
+	public void addNodesFromFilePath(String inputFilePath) {
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
+			String line = null;
+			String[] s = null;
+			int numInd = Integer.parseInt(reader.readLine());
+			int maxId = 0;
 			
-			Node n = this.addNode(s[0]);//cria ou retorna o individuo
-			n.addAttribute("sexo", s[1]);
-			n.addAttribute("cla", s[4]);
-			n.addAttribute("subcla", s[5]);
-			n.addAttribute("data_nasc", Integer.parseInt(s[6]));
-			n.addAttribute("data_morte", Integer.parseInt(s[7]));
-			
-			if(Integer.parseInt(s[2]) != 0){
-				this.addNode(s[2]);//cria pai caso ele nao exista
-				this.addEdge(s[2]+"_"+s[0], s[2], s[0], true);
+			for(int i = 0; i < numInd; i++)
+			{
+				line = reader.readLine();
+				s = line.split("\\s+");
+				if(Integer.parseInt(s[0]) > maxId) maxId = Integer.parseInt(s[0]);
+				
+				Node n = this.addNode(s[0]);//cria ou retorna o individuo
+				n.addAttribute("sexo", s[1]);
+				n.addAttribute("cla", s[4]);
+				n.addAttribute("subcla", s[5]);
+				n.addAttribute("dataNascimento", Integer.parseInt(s[6]));
+				n.addAttribute("dataMorte", Integer.parseInt(s[7]));
+				
+				if(Integer.parseInt(s[2]) != 0){
+					this.addNode(s[2]);//cria pai caso ele nao exista
+					this.addEdge(s[2]+"_"+s[0], s[2], s[0], true);
+				}
+				
+				if(Integer.parseInt(s[3]) != 0){
+					this.addNode(s[3]);//cria mae caso ele nao exista
+					this.addEdge(s[3]+"_"+s[0], s[3], s[0], true);
+				}
 			}
+			reader.close();
+			this.setRelations(maxId);
+		}catch(Exception e){
 			
-			if(Integer.parseInt(s[3]) != 0){
-				this.addNode(s[3]);//cria mae caso ele nao exista
-				this.addEdge(s[3]+"_"+s[0], s[3], s[0], true);
-			}
 		}
-		reader.close();
-		this.setRelations(maxId);
 	}
 
 }
