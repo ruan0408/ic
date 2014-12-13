@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
+
 import java.util.*;
 
 import org.graphstream.graph.Edge;
@@ -9,13 +8,15 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 
-public class IndioSingleGraph extends SingleGraph 
-{
-	String[][] relations;//relations[ego][alter] diz o que o alter é para o ego (como o ego chama o alter)
+public class IndioSingleGraph extends SingleGraph {
+	
+	private String[][] relations;//relations[ego][alter] tells how ego calls alter
+	private boolean isReady;
 	
 	public IndioSingleGraph(String id) {
 		super(id);
 		super.setStrict(false);
+		this.isReady = false;
 	}
 	
 	public void setRelations(int tam) {
@@ -25,6 +26,9 @@ public class IndioSingleGraph extends SingleGraph
 	}
 	
 	public void computeRelations() {
+		
+		if(this.isReady) return;
+		
 		Iterator<Node> it = this.getNodeIterator();
 		Iterator<Edge> it2, it3;
 		Node ego, alter, viz, noEixo;
@@ -96,6 +100,7 @@ public class IndioSingleGraph extends SingleGraph
 			this.computeTawiEkokwe(ego);
 			this.cleanNodes();
 		}
+		this.isReady = true;
 	}
 
 	private void classifyRelatives(Node ego, Node alter, boolean cruzado) {
@@ -404,6 +409,7 @@ public class IndioSingleGraph extends SingleGraph
 			else
 				resp = resp+" "+token;
 		}
+		
 		return resp;
 	}
 	
@@ -540,6 +546,7 @@ public class IndioSingleGraph extends SingleGraph
 				e.addAttribute("ui.hide");
 			}
 			reader.close();
+			this.isReady = false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -577,6 +584,7 @@ public class IndioSingleGraph extends SingleGraph
 			}
 			reader.close();
 			this.setRelations(maxId);
+			this.isReady = false;
 		}
 		catch(Exception e) {
 			

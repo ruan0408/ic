@@ -1,11 +1,7 @@
 import java.awt.FlowLayout;
-//import java.util.*;
+
 import java.awt.*;
 import javax.swing.*;
-
-import java.awt.event.*;
-//import java.io.*;
-
 
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
@@ -17,6 +13,7 @@ public class Gui extends JFrame
 	private JPanel mainPanel;
 	View view;
 	private JPanel options;
+	private JPanel textPanel;
 	
 	JButton inputFileButton;
 	JButton marriageButton;
@@ -28,18 +25,23 @@ public class Gui extends JFrame
 	String inputFilePath;
 	IndioSingleGraph graph;
 	
-	public Gui() throws Exception
+	public Gui()
 	{
 		super("Projeto dos índios");
+		super.setResizable(false);
 		inputFilePath = null;
 		
 		/* ************ BOTOES E CAIXAS**************/
-		inputFileButton = new JButton("Individuos");
+		inputFileButton = new JButton("Indivíduos");
 		marriageButton = new JButton("Casamentos");
 		consultButton = new JButton("Consultar");
 		ind1 = new JTextField();
 		ind2 = new JTextField();
-		textArea = new JTextArea(4,4);
+		textArea = new JTextArea(4,30);
+		textArea.setPreferredSize(new Dimension(2, 30));
+		textArea.setLineWrap(true);
+		textArea.setEditable(false);
+		textArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		inputFileButton.addActionListener(new InputFileHandler(this));
 		marriageButton.addActionListener(new MarriageHandler(this));
@@ -52,11 +54,12 @@ public class Gui extends JFrame
 		/* ********* PAINEIS********************* */
 		mainPanel = new JPanel();
 		options = new JPanel();
+		textPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		options.setLayout(new FlowLayout());
+		textPanel.setLayout(new FlowLayout());
 		
 		graph = new IndioSingleGraph("Graph");
-		graph.setStrict(false);//evitar problemas
 		
 		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
@@ -75,10 +78,11 @@ public class Gui extends JFrame
 		options.add(consultButton);
 		options.add(ind1);
 		options.add(ind2);
-		options.add(textArea);
+		textPanel.add(textArea);
 		
 		//mainPanel.add(view);
 		mainPanel.add(options);
+		mainPanel.add(textPanel);
 		
 		this.add(mainPanel);
 		
