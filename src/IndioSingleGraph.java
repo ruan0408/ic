@@ -85,6 +85,15 @@ public class IndioSingleGraph extends SingleGraph
 					}
 				}
 			}
+			this.computeConsogros(ego);
+			this.computeGenroNora(ego);
+			this.computeNeraneto(ego);
+			this.computeNerani(ego);
+			this.computeNodaAkero(ego);
+			this.computeNowatolo(ego);
+			this.computeNowatore(ego);
+			this.computeSogros(ego);
+			this.computeTawiEkokwe(ego);
 			this.cleanNodes();
 		}
 	}
@@ -259,6 +268,48 @@ public class IndioSingleGraph extends SingleGraph
 		this.computeNowatoreNowatolo(ego, "nowatolo");
 	}
 	
+	public void computeTawiEkokwe(Node ego) {
+		if(ego.getAttribute("sexo").toString().equals("m"))
+			return;
+		this.computeEkokweAkero(ego, "ekokwe");
+	}
+	
+	public void computeNodaAkero(Node ego) {
+		if(ego.getAttribute("sexo").toString().equals("f"))
+			return;
+		this.computeEkokweAkero(ego, "akero");
+	}
+	
+	private void computeEkokweAkero(Node ego, String relation) {
+		Node parent;
+		List<Node> parentSimblings;
+		List<Node> simblings = relation.equals("ekokwe") ? this.getBrothers(ego) : this.getSisters(ego);
+		
+		for(Node simb : simblings)
+			for(Node child : this.getChildren(simb)) {
+				
+				parent = this.getTheOtherParent(simb, child);
+				if(parent == null) continue;
+				parentSimblings = relation.equals("ekokwe") ? 
+						this.getBrothers(parent) : this.getSisters(parent);
+				
+				for(Node pret : parentSimblings)
+					switch(relation){
+						case "ekokwe":
+							if(child.getAttribute("sexo").toString().equals("m"))
+								this.addRelation(ego, pret, "tawihi-ekokwe");
+							else
+								this.addRelation(ego, pret, "tawiro-ekokwe");
+							break;
+						case "akero":
+							if(child.getAttribute("sexo").toString().equals("m"))
+								this.addRelation(ego, pret, "nodaese-akero");
+							else
+								this.addRelation(ego, pret, "nodaexo-akero");
+							break;
+					}
+			}
+	}
 	public void computeSogros(Node ego) {
 		Node parent;
 		List<Node> list = new ArrayList<Node>();
@@ -266,7 +317,7 @@ public class IndioSingleGraph extends SingleGraph
 		
 		for(Node child : this.getChildren(ego)) {
 			parent = this.getTheOtherParent(ego, child);
-			if(parent == null) break;
+			if(parent == null) continue;
 			list.add(parent);
 		}
 		
@@ -385,6 +436,7 @@ public class IndioSingleGraph extends SingleGraph
 			n = e.getTargetNode();
 			if(!e.isDirected() || n == ego || !n.getAttribute("sexo").toString().equals(sexo)) 
 				continue;
+			if(brothers.contains(n)) continue;
 			brothers.add(n);
 		}
 		return brothers;
@@ -403,7 +455,7 @@ public class IndioSingleGraph extends SingleGraph
 	@SuppressWarnings("unchecked")
 	private List<Node> getConjugues(Node ego) {
 		if((List<Node>)ego.getAttribute("conjugues") == null)
-			return new ArrayList<Node>();
+			ego.setAttribute("conjugues", new ArrayList<Node>());
 		
 		return (List<Node>)ego.getAttribute("conjugues");
 	}
@@ -467,7 +519,6 @@ public class IndioSingleGraph extends SingleGraph
 			BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
 			String line = null;
 			String[] s = null;
-			List<Node> conjugues;
 			Node man, woman;
 			
 			int numCas = Integer.parseInt(reader.readLine());
@@ -480,24 +531,8 @@ public class IndioSingleGraph extends SingleGraph
 				woman = this.addNode(s[1]);//cria ou retorna a mulher
 				
 				//individuos podem ter mais de um casamento
-				if((conjugues = (List<Node>)man.getAttribute("conjugues")) != null)
-					conjugues.add(woman);
-				else {
-					List<Node> l = new ArrayList<Node>();
-					l.add(woman);
-					man.addAttribute("conjugues", l);
-				}
-				
-				if((conjugues = (List<Node>)woman.getAttribute("conjugues")) != null)
-					conjugues.add(man);
-				else {
-					List<Node> l = new ArrayList<Node>();
-					l.add(man);
-					woman.addAttribute("conjugues", l);
-				}
-				
-				man.addAttribute("conjugue", woman);
-				woman.addAttribute("conjugue", man);
+				this.getConjugues(man).add(woman);
+				this.getConjugues(woman).add(man);
 				
 				Edge e = this.addEdge(s[0]+" "+s[1], s[0], s[1], false);
 				

@@ -23,9 +23,9 @@ public class Gui extends JFrame
 	JButton consultButton;
 	JTextField ind1;
 	JTextField ind2;
+	JTextArea textArea;
 
 	String inputFilePath;
-	String[][] relations;
 	IndioSingleGraph graph;
 	
 	public Gui() throws Exception
@@ -37,8 +37,9 @@ public class Gui extends JFrame
 		inputFileButton = new JButton("Individuos");
 		marriageButton = new JButton("Casamentos");
 		consultButton = new JButton("Consultar");
-		ind1 = new JTextField("Individuo 1");
-		ind2 = new JTextField("Individuo 2");
+		ind1 = new JTextField();
+		ind2 = new JTextField();
+		textArea = new JTextArea(4,4);
 		
 		inputFileButton.addActionListener(new InputFileHandler(this));
 		marriageButton.addActionListener(new MarriageHandler(this));
@@ -58,7 +59,6 @@ public class Gui extends JFrame
 		graph.setStrict(false);//evitar problemas
 		
 		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-		//viewer.enableAutoLayout(hl);
 		viewer.disableAutoLayout();
 		viewer.enableXYZfeedback(false);
 		
@@ -75,23 +75,18 @@ public class Gui extends JFrame
 		options.add(consultButton);
 		options.add(ind1);
 		options.add(ind2);
+		options.add(textArea);
 		
-		mainPanel.add(view);
+		//mainPanel.add(view);
 		mainPanel.add(options);
 		
 		this.add(mainPanel);
 		
-		
-		/*graph.addNodesFromFilePath("/home/ruan0408/workspace/Indios/EN-31jul2011-individuos-g-(com-cla).txt");
-		graph.addMarriagesFromFilePath("/home/ruan0408/workspace/Indios/EN-31jul2011-casamentos-g.txt");
-		graph.computeRelations();
-		graph.getRelation(1007, 1668);*/
-		System.out.println("fim");
 		/* ******************************************/
 		
 		/* ************ JFRAME ************************/
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//this.setVisible(true);		
+		this.setVisible(true);		
 		this.pack();
 		/* ******************************************/
 		
@@ -102,12 +97,5 @@ public class Gui extends JFrame
         graph.addAttribute("ui.stylesheet","node { fill-color: gray; size:10px;}");
 		/* *****************************************/
 		
-		//this.setLayout(new FlowLayout());
-		//HierarchicalLayout hl = new HierarchicalLayout();//**************************************
-		//hl.setRoots("1584", "1561", "1560", "1558", "1519", "1518", "1517", "1516", "1515", "1514", "1513", "1512", "1510", "1509", "1508", "1505", "1504", "1503", "1502", "1501", "1500", "1496", "1495", "1494", "1492", "1491", "1490", "1489", "1487", "1486", "1485", "1482", "1481", "1480", "1479", "1478", 
-		//		"1477", "1476", "1474", "1473", "1472", "1471", "1470", "1469", "1468", "1467", "1466", "1465", "1464", "1462", "1461", "1460", "1459", "1458", "1452", "1449", "1448", "1447", "1440", "1416", "1415", "1411", "1410", "1408", "1407", "1404", "1112");//***************************************************
-
-		//Viewer v = g.display(false);***************************************
-		//v.enableAutoLayout(hl);********************************************
 	}
 }

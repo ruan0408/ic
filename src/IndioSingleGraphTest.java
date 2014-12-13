@@ -48,6 +48,29 @@ public class IndioSingleGraphTest {
 		assertEquals("yaya-lo", 	graph.getRelation(1888, 1267));
 		assertEquals("yowa-re", 	graph.getRelation(1753, 1806));
 		assertEquals("yaya-re", 	graph.getRelation(1600, 1175));
+		assertEquals("neraneto", 	graph.getRelation(1167, 1168));
+		assertEquals("nerani", 		graph.getRelation(1168, 1167));
+		assertEquals("nerani", 		graph.getRelation(1063, 1170));
+		assertEquals("nerani", 		graph.getRelation(1156, 1007));
+		assertEquals("neraneto", 	graph.getRelation(1007, 1156));
+		assertEquals("neraneto", 	graph.getRelation(1170, 1145));
+		assertEquals("nowatore", 	graph.getRelation(1265, 1095));
+		assertEquals("nowatore", 	graph.getRelation(1095, 1266));
+		assertEquals("nowatolo", 	graph.getRelation(1173, 1145));
+		assertEquals("nowatolo", 	graph.getRelation(1063, 1173));
+		assertEquals("nonatonawene",graph.getRelation(1167, 1153));
+		assertEquals("nonatonawene-ro",graph.getRelation(1168, 1154));
+		assertEquals("nonatonawene-ro",graph.getRelation(1167, 1154));
+		assertEquals("nonatonawene",graph.getRelation(1168, 1153));
+		assertEquals("niasero",		graph.getRelation(1063, 1168));
+		assertEquals("niatokwe",	graph.getRelation(1155, 1153));
+		assertEquals("notene",		graph.getRelation(1153, 1155));
+		assertEquals("noxineto",	graph.getRelation(1168, 1145));
+		assertEquals("",			graph.getRelation(1156, 1172));
+		assertEquals("nodaexo-akero nodaese-akero neraneto",graph.getRelation(1265, 1094));
+		assertEquals("tawiro-ekokwe nerani tawihi-ekokwe",graph.getRelation(1094, 1265));
+		
+		
 		
 		//graph.getAllCompositeRelations();
 	}
