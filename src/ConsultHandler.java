@@ -20,6 +20,7 @@ class ConsultHandler implements ActionListener {
 				gui.graph.computeRelations();
 				gui.textArea.setText(null);
 				gui.textArea.insert(gui.graph.getRelation(t1, t2), 0);
+				
 			}
 		}
 	}

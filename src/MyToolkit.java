@@ -5,31 +5,26 @@ import org.graphstream.graph.Graph;
 import java.util.*;
 
 
-public class MyToolkit extends Toolkit 
-{
-	public MyToolkit() 
-	{
+public class MyToolkit extends Toolkit {
+	
+	public MyToolkit() {
 		super();
 	}
 	
-	public ArrayList<Node> topologicalSort(Graph dag)
-	{	
+	public ArrayList<Node> topologicalSort(Graph dag) {	
 		ArrayList<Node> list = new ArrayList<Node>();
 		
-		for(Iterator<Node> nodes = dag.getNodeIterator(); nodes.hasNext();)
-			nodes.next().setAttribute("searched", false);
+		for(Node n : dag.getNodeSet())
+			n.setAttribute("searched", false);
 		
-		for(Iterator<Node> nodes = dag.getNodeIterator(); nodes.hasNext();)
-		{
-			Node n = nodes.next();
+		for(Node n : dag.getNodeSet())
 			if(!(boolean)n.getAttribute("searched")) 
 				dfsR(n, list);
-		}
+		
 		return list;
 	}
 	
-	private void dfsR(Node n, ArrayList<Node> list)
-	{	
+	private void dfsR(Node n, ArrayList<Node> list) {	
 		Edge marriage = null;
 		Edge e = null;
 		Node op = null;
@@ -37,8 +32,7 @@ public class MyToolkit extends Toolkit
 		
 		Iterator<? extends Edge> edges = n.getLeavingEdgeIterator();
 
-		while(edges.hasNext()) 
-		{	
+		while(edges.hasNext()) {	
 			e = edges.next();
 			op = e.getOpposite(n);
 					
@@ -54,12 +48,10 @@ public class MyToolkit extends Toolkit
 		list.add(0, n);
 	}
 	
-	public boolean isTopologicallySorted(ArrayList<Node> ts)
-	{
+	public boolean isTopologicallySorted(ArrayList<Node> ts) {
 		Node node = null;
 		for(Node n : ts)
-			for(Iterator<? extends Edge> outEdges = n.getLeavingEdgeIterator(); outEdges.hasNext();)
-			{	
+			for(Iterator<? extends Edge> outEdges = n.getLeavingEdgeIterator(); outEdges.hasNext();){	
 				node = outEdges.next().getOpposite(n);
 				if(ts.indexOf(n) > ts.indexOf(node))
 					return false;
@@ -67,8 +59,7 @@ public class MyToolkit extends Toolkit
 		return true;
 	}
 	
-	public void longestPath(Graph dag)
-	{	
+	public void longestPath(Graph dag) {	
 		Node maxPathNode;
 		ArrayList<Node> ts = this.topologicalSort(dag);
 		
@@ -83,8 +74,7 @@ public class MyToolkit extends Toolkit
 			if(currentNode.getInDegree() == 0)
 				currentNode.setAttribute("maxPathLength", 0);
 			else
-				for(Iterator<Edge> inEdges = currentNode.getEnteringEdgeIterator(); inEdges.hasNext();)
-				{
+				for(Iterator<Edge> inEdges = currentNode.getEnteringEdgeIterator(); inEdges.hasNext();) {
 					Edge in = inEdges.next();
 					if(!in.isDirected()) continue;
 					
@@ -97,13 +87,11 @@ public class MyToolkit extends Toolkit
 		}
 	}
 	
-	private void longestPathR(Node current, ArrayList<Node> lp)
-	{	
+	private void longestPathR(Node current, ArrayList<Node> lp) {	
 		if(current.getInDegree() == 0) return;
 		
 		Node backReturn = null;//will be returned
-		for(Iterator<Edge> inEdges = current.getEnteringEdgeIterator(); inEdges.hasNext();)
-		{
+		for(Iterator<Edge> inEdges = current.getEnteringEdgeIterator(); inEdges.hasNext();) {
 			Edge in = inEdges.next();
 			Node backCurrent = in.getOpposite(current);
 			if(backReturn == null || (int)backCurrent.getAttribute("maxPathLength") > (int)backReturn.getAttribute("maxPathLength"))
@@ -114,15 +102,13 @@ public class MyToolkit extends Toolkit
 		longestPathR(backReturn, lp);
 	}
 	
-	public void insertDummyNodes(Graph graph)
-	{	
+	public void insertDummyNodes(Graph graph) {	
 		Edge edge;
 		Node zero, one, aux;
 		int diff, cnt, cnt2;
 		cnt = cnt2 = 0;
 		
-		for(Iterator<Edge> edges = graph.getEdgeIterator(); edges.hasNext();)
-		{
+		for(Iterator<Edge> edges = graph.getEdgeIterator(); edges.hasNext();) {
 			edge = edges.next();
 			if(!edge.isDirected())continue;
 			
@@ -133,8 +119,7 @@ public class MyToolkit extends Toolkit
 			if(diff > 1)
 				graph.removeEdge(edge);
 				
-			while(diff > 1)
-			{
+			while(diff > 1) {
 				aux = graph.addNode("dummyNode"+cnt);
 				aux.addAttribute("ui.style", "fill-color: rgb(0,0,0);");
 				//aux.addAttribute("ui.hide");
@@ -145,8 +130,7 @@ public class MyToolkit extends Toolkit
 				zero = aux;
 				cnt++; cnt2++; diff--;
 				
-				if(diff == 1)
-				{
+				if(diff == 1) {
 					graph.addEdge("dummyEdge"+cnt2, zero, one, true).addAttribute("ui.style", "fill-color: rgb(0,100,0);");
 					cnt2++;
 					break;
@@ -155,10 +139,8 @@ public class MyToolkit extends Toolkit
 		}			
 	}
 	
-	public void checkDummy(Graph graph)
-	{	
-		for(Iterator<Edge> edges = graph.getEdgeIterator(); edges.hasNext();)
-		{
+	public void checkDummy(Graph graph) {	
+		for(Iterator<Edge> edges = graph.getEdgeIterator(); edges.hasNext();) {
 			Edge edge = edges.next();
 			Node zero = edge.getSourceNode();
 			Node one = edge.getTargetNode();

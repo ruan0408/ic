@@ -402,12 +402,13 @@ public class IndioSingleGraph extends SingleGraph {
 	 
 	public String getRelation(int ego, int alter) {
 		String resp = "";
-		HashSet<String> h = new HashSet<String>(Arrays.asList(relations[ego][alter].split(" ")));
-		for(String token : h.toArray(new String[0])){
-			if(resp.equals(""))
-				resp = token;
-			else
-				resp = resp+" "+token;
+		try {
+			HashSet<String> h = new HashSet<String>(Arrays.asList(relations[ego][alter].split(" ")));
+			for(String token : h.toArray(new String[0]))
+				resp = resp.equals("") ? token : resp+" "+token;
+		}
+		catch(Exception e) {
+			return "";
 		}
 		
 		return resp;
@@ -584,6 +585,7 @@ public class IndioSingleGraph extends SingleGraph {
 			}
 			reader.close();
 			this.setRelations(maxId);
+			//this.performLayoutAlgorithm();
 			this.isReady = false;
 		}
 		catch(Exception e) {

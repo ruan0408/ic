@@ -70,7 +70,10 @@ public class IndioSingleGraphTest {
 		assertEquals("nodaexo-akero nodaese-akero neraneto",graph.getRelation(1265, 1094));
 		assertEquals("tawiro-ekokwe nerani tawihi-ekokwe",graph.getRelation(1094, 1265));
 		
-		
+		//composite relations
+		assertEquals("yaya-re koko-re", graph.getRelation(1837, 1073));
+		assertEquals("noheroĩ etaĩ", 	graph.getRelation(1837, 1770));
+		assertEquals("yaya-re haha-re", graph.getRelation(1882, 1027));
 		
 		//graph.getAllCompositeRelations();
 	}

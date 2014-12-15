@@ -28,7 +28,7 @@ public class Gui extends JFrame
 	public Gui()
 	{
 		super("Projeto dos índios");
-		super.setResizable(false);
+		//super.setResizable(false);
 		inputFilePath = null;
 		
 		/* ************ BOTOES E CAIXAS**************/
@@ -76,7 +76,9 @@ public class Gui extends JFrame
 		options.add(marriageButton);
 		options.add(inputFileButton);
 		options.add(consultButton);
+		options.add(new JLabel("Ego:"));
 		options.add(ind1);
+		options.add(new JLabel("Alter:"));
 		options.add(ind2);
 		textPanel.add(textArea);
 		
