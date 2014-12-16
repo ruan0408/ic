@@ -1,4 +1,6 @@
+package test;
 import static org.junit.Assert.*;
+import graph.IndioSingleGraph;
 
 import org.junit.After;
 import org.junit.Before;

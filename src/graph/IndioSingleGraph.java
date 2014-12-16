@@ -1,3 +1,5 @@
+package graph;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 
@@ -315,6 +317,7 @@ public class IndioSingleGraph extends SingleGraph {
 					}
 			}
 	}
+	
 	public void computeSogros(Node ego) {
 		Node parent;
 		List<Node> list = new ArrayList<Node>();

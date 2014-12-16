@@ -1,3 +1,4 @@
+package graph;
 import org.graphstream.algorithm.Toolkit;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Edge;
