@@ -27,4 +27,26 @@ public class TriboBuilder {
 		}
 		return tribo;
 	}
+	
+	public static void adicionaCasamentos(Tribo tribo, String arquivoCasamentos) {
+		
+		BufferedReader reader;
+		String line = null;
+		String[] s = null;
+		int numeroCasamentos;
+		try {
+			reader = new BufferedReader(new FileReader(arquivoCasamentos));
+			numeroCasamentos = Integer.parseInt(reader.readLine());
+			for(int i = 0; i < numeroCasamentos; i++) {
+				line = reader.readLine();
+				s = line.split("\\s+");
+				//estou ignorando a data do casamento
+				tribo.addCasamento(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
+			}
+			reader.close();
+		} 
+		catch (Exception e) {
+			System.out.println("Erro na leitura do arquivo de casamentos");
+		}
+	}
 }

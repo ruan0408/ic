@@ -12,7 +12,7 @@ public class CalculadorDeRelacoesTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Tribo tribo = TriboBuilder.constroi(String caminhoArquivo);
+		Tribo tribo = TriboBuilder.constroi("/home/ruan0408/workspace/Indios/EN-31jul2011-individuos-g-(com-cla).txt");
 		calc = new CalculadorDeRelacoes(tribo);
 		calc.calculaTodasAsRelacoes();
 	}
