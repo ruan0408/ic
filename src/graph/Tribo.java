@@ -17,6 +17,10 @@ public class Tribo extends SingleGraph {
 		return indio;
 	}
 	
+	public void addFilho(Indio mae, Indio filho) {
+		this.addEdge(mae.getId()+"_"+filho.getId(), mae, filho, true);
+	}
+	
 	public Indio getIndio(int index) {
 		return this.getNode(index);
 	}

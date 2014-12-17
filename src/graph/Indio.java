@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.graphstream.graph.Edge;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.graph.implementations.SingleNode;
 
 public class Indio extends SingleNode{
@@ -12,17 +11,22 @@ public class Indio extends SingleNode{
 	public static final int MASCULINO = 0;
 	public static final int FEMININO = 1;
 	
-	private int numero;
+	private int 	numero;
+	private Tribo 	tribo;
 	private Indio 	mae;
 	private Indio 	pai;
+	private String 	cla;
+	private String 	subCla;
 	private List<Indio> conjuges;
 	private int 	anoNascimento;
-	private int sexo;
+	private int 	anoMorte;
+	private int 	sexo;
 	
-	public Indio(SingleGraph graph, String id) {
-		super(graph, id);
+	public Indio(Tribo tribo, String id) {
+		super(tribo, id);
 		this.conjuges = new ArrayList<Indio>();
 		this.anoNascimento = 0;
+		this.tribo = tribo;
 	}
 
 	public Indio getMae() {
@@ -33,8 +37,20 @@ public class Indio extends SingleNode{
 		return this.pai;
 	}
 	
+	public String getCla() {
+		return this.cla;
+	}
+	
+	public String getSubCla() {
+		return this.subCla;
+	}
+	
 	public int getAnoNascimento() {
 		return this.anoNascimento;
+	}
+	
+	public int getAnoMorte() {
+		return this.anoMorte;
 	}
 	
 	public List<Indio> getConjuges() {
@@ -53,6 +69,16 @@ public class Indio extends SingleNode{
 		this.mae = mae;
 	}
 	
+	public void setMae(int mae) {
+		this.setMae(this.tribo.addIndio(mae));
+		this.tribo.addFilho(this.mae, this);
+	}
+	
+	public void setPai(int pai) {
+		this.setPai(this.tribo.addIndio(pai));
+		this.tribo.addFilho(this.pai, this);
+	}
+	
 	public void setPai(Indio pai) {
 		this.pai = pai;
 	}
@@ -65,6 +91,14 @@ public class Indio extends SingleNode{
 		this.numero = n;
 	}
 	
+	public void setCla(String cla) {
+		this.cla = cla;
+	}
+	
+	public void setSubCla(String subCla) {
+		this.subCla = subCla;
+	}
+	
 	public boolean eHomem() {
 		return this.sexo == Indio.MASCULINO;
 	}
@@ -75,6 +109,10 @@ public class Indio extends SingleNode{
 	
 	public void setAnoNascimento(int ano) {
 		this.anoNascimento = ano;
+	}
+	
+	public void setAnoMorte(int ano) {
+		this.anoMorte = ano;
 	}
 	
 	public void addConjuge(Indio conjugue) {
@@ -104,6 +142,37 @@ public class Indio extends SingleNode{
 			filhos.add((Indio)e.getOpposite(this));
 		}		
 		return filhos;
+	}
+	
+	public List<Indio> getFilhosExceto(Indio filho) {
+		List<Indio> filhos = this.getFilhos();
+		filhos.remove(filho);
+		return filhos;
+	}
+	
+	public List<Indio> getPais() {
+		List<Indio> pais = new ArrayList<Indio>();
+		if(this.getPai() != null) pais.add(this.getPai());
+		if(this.getMae() != null) pais.add(this.getMae());
+		return pais;
+	}
+	
+	public void constroi(String sexo, String cla, 
+			String subCla, String anoNascimento, String anoMorte, String pai, String mae) {
+		
+		int meuPai, minhaMae;
+		if(sexo.equals("f")) this.setSexo(FEMININO);
+		else this.setSexo(MASCULINO);
+		
+		this.setCla(cla);
+		this.setSubCla(subCla);
+		this.setAnoNascimento(Integer.parseInt(anoNascimento));
+		this.setAnoMorte(Integer.parseInt(anoMorte));
+		
+		meuPai = Integer.parseInt(pai);
+		minhaMae = Integer.parseInt(mae);
+		if(meuPai != 0) this.setPai(meuPai);
+		if(minhaMae != 0) this.setMae(minhaMae);
 	}
 	
 	private List<Indio> getSimblingsOfSex(int sexo) {

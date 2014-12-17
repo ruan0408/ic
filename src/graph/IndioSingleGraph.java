@@ -76,7 +76,7 @@ public class IndioSingleGraph extends SingleGraph {
 					while(!aux.isEmpty()) {
 						alter = aux.removeLast();
 						
-						if((int)alter.getAttribute("nivel") < -2) break;
+						if((int)alter.getAttribute("nivel") < -2) continue;
 						if(alter != ego) classifyRelatives(ego, alter, cruzado);
 						
 						it3 = alter.getLeavingEdgeIterator();

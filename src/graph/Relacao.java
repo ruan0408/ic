@@ -2,7 +2,7 @@ package graph;
 
 public enum Relacao {
 	ATORE("ato-re"), 	AHIRO("ahi-ro"), 		KOKORE("koko-re"), 	HAHARE("haha-re"), 	MAMALO("mama-lo"), 
-	KEKERO("keke-ro"), 	NOREHOI("noheroĩ"), 	YAYARE("yaya-re"), 	YOWARE("yowa-re"), 	YAYALO("yaya-lo"), 
+	KEKERO("keke-ro"), 	NOHEROI("noheroĩ"), 	YAYARE("yaya-re"), 	YOWARE("yowa-re"), 	YAYALO("yaya-lo"), 
 	YOWALO("yowa-lo"), 	NODAISE("nodai-se"),	TAWIHI("tawihi"), 	ETAI("etaĩ"), 		NODAIXO("nodaixo"), 
 	TAWIRO("tawiro"), 	NOXIWETE("noxiwete"), 	NOXIWETO("noxiwete"),
 	
