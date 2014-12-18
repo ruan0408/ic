@@ -3,21 +3,18 @@ package graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Stack;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 public class CalculadorDeRelacoes {
 	
 	private Tribo 	tribo;
 	private String 	relacoes[][];
-	private boolean jaEstaComputado;
+	private boolean estaCalculado;
 	private Map<Indio, Indio> anterior;
 	private Map<Indio, Integer>	 niveis;
 	
@@ -26,39 +23,58 @@ public class CalculadorDeRelacoes {
 		this.anterior = new HashMap<Indio, Indio>();
 		this.niveis = new HashMap<Indio, Integer>();
 		this.setRelacoes();
-		this.jaEstaComputado = false;
+		this.estaCalculado = false;
 	}
 	
-	public void calculaTodasAsRelacoes() {
+	public String getRelacao(int ego, int alter) {
+		if(!this.estaCalculado) {
+			this.calculaTodasAsRelacoes();
+			this.estaCalculado = true;
+		}
 		
-		if(this.jaEstaComputado) return;
+		String resp = "";
+		try {
+			HashSet<String> h = new HashSet<String>(Arrays.asList(relacoes[ego][alter].split(" ")));
+			for(String token : h.toArray(new String[0]))
+				resp = resp.equals("") ? token : resp+" "+token;
+		}
+		catch(Exception e) {
+			return "";
+		}
+		
+		return resp;
+	}
+	
+	//Gambiarra...
+	public Tribo getTribo() {
+		return this.tribo;
+	}
+	
+	private void calculaTodasAsRelacoes() {
+		
 		for(Node indio : tribo.getNodeSet()) {
 			this.calculaRelacoesCosanguineas((Indio)indio);
 			this.calculaRelacoesDeAfinidade((Indio)indio);
 		}
-		this.jaEstaComputado = true;
-	}
-	
-	public String getRelacao(int ego, int alter) {
-		return this.relacoes[ego][alter];
 	}
 	
 	private void calculaRelacoesCosanguineas(Indio ego) {
 		
 		Indio filhoAnterior;
 		boolean cruzado;
-		Stack<Indio> pilha;
+		Stack<Indio> pilha = new Stack<Indio>();
 		
 		for(Indio ancestral : this.getAncestrais(ego)) {
-		
+			
 			filhoAnterior = this.anterior.get(ancestral);
 			for(Indio alter : ancestral.getFilhosExceto(filhoAnterior)) {
 				cruzado = false;
-				pilha = new Stack<Indio>();
+				pilha.clear();
 				
-				if(alter.getSexo() != filhoAnterior.getSexo()) cruzado = true;
+				if(filhoAnterior != null && 
+						alter.getSexo() != filhoAnterior.getSexo()) cruzado = true;
+				
 				this.niveis.put(alter, this.niveis.get(ancestral)-1);
-				
 				pilha.add(alter);
 				while(!pilha.isEmpty()) {
 					alter = pilha.pop();
@@ -73,43 +89,12 @@ public class CalculadorDeRelacoes {
 				}
 			}
 		}
-	}
-	
-	private void calculaRelacoesDeAfinidade(Indio ego) {
-		this.calculaConsogros(ego);
-		this.calculaGenroNora(ego);
-		this.calculaNeraneto(ego);
-		this.calculaNerani(ego);
-		this.calculaNodaAkero(ego);
-		this.calculaNowatolo(ego);
-		this.calculaNowatore(ego);
-		this.calculaSogros(ego);
-		this.calculaTawiEkokwe(ego);
-	}
-	
-	private List<Indio> getAncestrais(Indio ego) {
-		Indio ancestral;
-		List<Indio> eixo = new ArrayList<Indio>();
-		
-		this.niveis.put(ego, 0);
-		eixo.add(ego);
-		for(int i = 0; i < eixo.size(); i++) {
-			ancestral = eixo.get(i);
-			if(this.niveis.get(ancestral) > 3) continue;
-			
-			for(Indio paiDoAncestral : ancestral.getPais()) {
-				
-				this.anterior.put(paiDoAncestral, ancestral);
-				this.niveis.put(paiDoAncestral, this.niveis.get(ancestral)+1);
-				classificaCosanguineos(ego, paiDoAncestral, false);//ancestors are parallel by definition
-				eixo.add(paiDoAncestral);
-			}
-		}
-		return eixo;
+		niveis.clear();
+		anterior.clear();
 	}
 	
 	private void classificaCosanguineos(Indio ego, Indio alter, boolean cruzado) {
-
+		
 		switch(this.niveis.get(alter)) {
 			case -2:
 				if(alter.eMulher())
@@ -180,6 +165,39 @@ public class CalculadorDeRelacoes {
 				if(this.niveis.get(alter) != 4)
 					System.out.println("Shouldn't happen");
 		}
+	}
+	
+	private List<Indio> getAncestrais(Indio ego) {
+		Indio ancestral;
+		List<Indio> eixo = new ArrayList<Indio>();
+		
+		this.niveis.put(ego, 0);
+		eixo.add(ego);
+		for(int i = 0; i < eixo.size(); i++) {
+			ancestral = eixo.get(i);
+			if(this.niveis.get(ancestral) > 3) continue;
+			
+			for(Indio paiDoAncestral : ancestral.getPais()) {
+				
+				this.anterior.put(paiDoAncestral, ancestral);
+				this.niveis.put(paiDoAncestral, this.niveis.get(ancestral)+1);
+				classificaCosanguineos(ego, paiDoAncestral, false);//ancestrais são paralelos por definição
+				eixo.add(paiDoAncestral);
+			}
+		}
+		return eixo;
+	}
+	
+	private void calculaRelacoesDeAfinidade(Indio ego) {
+		this.calculaConsogros(ego);
+		this.calculaGenroNora(ego);
+		this.calculaNeraneto(ego);
+		this.calculaNerani(ego);
+		this.calculaNodaAkero(ego);
+		this.calculaNowatolo(ego);
+		this.calculaNowatore(ego);
+		this.calculaSogros(ego);
+		this.calculaTawiEkokwe(ego);
 	}
 	
 	private void calculaNerani(Indio ego) {

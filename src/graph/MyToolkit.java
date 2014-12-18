@@ -5,7 +5,6 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import java.util.*;
 
-
 public class MyToolkit extends Toolkit {
 	
 	public MyToolkit() {

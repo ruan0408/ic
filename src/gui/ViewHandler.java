@@ -1,4 +1,4 @@
-package handlers;
+package gui;
 
 
 import java.awt.event.MouseEvent;
@@ -18,12 +18,12 @@ class ViewHandler implements MouseWheelListener, MouseMotionListener {
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent event) {	
-		int units = event.getWheelRotation();
+		/*int units = event.getWheelRotation();
 		Camera cam = this.gui.view.getCamera();
 		if(units > 0)
 			cam.setViewPercent(cam.getViewPercent()+0.1);
 		else
-			cam.setViewPercent(cam.getViewPercent()-0.1);
+			cam.setViewPercent(cam.getViewPercent()-0.1);*/
 	}	
 	
 	public void mouseDragged(MouseEvent event) {

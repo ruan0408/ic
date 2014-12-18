@@ -1,0 +1,54 @@
+package gui;
+
+
+import graph.CalculadorDeRelacoes;
+import graph.TriboBuilder;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+class CasamentosHandler implements ActionListener {
+	
+	private final Gui gui;
+
+	CasamentosHandler(Gui gui) {
+		this.gui = gui;
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		
+		if(event.getSource() == this.gui.getBotaoCasamentos()) {
+			JFileChooser chooser = new JFileChooser();
+			int resp = chooser.showOpenDialog(this.gui.getParent());
+			
+			if(resp == JFileChooser.APPROVE_OPTION) {
+				
+				String arquivoCasamentos = chooser.getSelectedFile().getAbsolutePath();
+				CalculadorDeRelacoes calc = this.gui.getCalculadorDeRelacoes();
+				
+				try {
+					TriboBuilder.adicionaCasamentos(calc.getTribo(), arquivoCasamentos);
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, 
+							"Arquivo fornecido está no formato errado!",
+							"Erro",
+							JOptionPane.ERROR_MESSAGE);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, 
+							"Arquivo não existe!",
+							"Erro",
+							JOptionPane.ERROR_MESSAGE);
+				} catch (NullPointerException e) {
+					JOptionPane.showMessageDialog(null, 
+							"Você deve inserir o arquivo de indivíduos antes",
+							"Erro",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+}

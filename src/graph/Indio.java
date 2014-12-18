@@ -120,7 +120,7 @@ public class Indio extends SingleNode{
 	}
 	
 	public boolean eMaisVelhoQue(Indio indio) {
-		return this.anoNascimento > indio.getAnoNascimento() ? true : false;
+		return this.anoNascimento < indio.getAnoNascimento() ? true : false;
 	}
 	
 	public Indio getOutroPai(Indio parent) {

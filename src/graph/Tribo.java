@@ -9,6 +9,11 @@ public class Tribo extends SingleGraph {
 		super(nome);
 		super.setStrict(false);
 		this.setNodeFactory(new FabricaDeIndios());
+		this.addAttribute("ui.quality");
+		this.addAttribute("ui.antialias");
+		this.addAttribute("ui.stylesheet","edge { fill-color: gray; arrow-size: 4px, 4px;}");
+		this.addAttribute("ui.stylesheet","node { fill-color: gray; size:10px;}");
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 	}
 	
 	public Indio addIndio(int n) {
