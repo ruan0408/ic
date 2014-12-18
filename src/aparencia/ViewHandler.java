@@ -1,4 +1,4 @@
-package gui;
+package aparencia;
 
 
 import java.awt.event.MouseEvent;

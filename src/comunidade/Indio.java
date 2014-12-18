@@ -1,4 +1,4 @@
-package graph;
+package comunidade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,5 +195,3 @@ public class Indio extends SingleNode{
 		return irmaos;
 	}
 }
-
-

@@ -1,15 +1,16 @@
-package gui;
+package aparencia;
 
-import graph.CalculadorDeRelacoes;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class ConsultHandler implements ActionListener {
+import comunidade.CalculadorDeRelacoes;
+
+class ConsultasHandler implements ActionListener {
 	
 	private final Gui gui;
 
-	ConsultHandler(Gui gui) {
+	ConsultasHandler(Gui gui) {
 		this.gui = gui;
 	}
 

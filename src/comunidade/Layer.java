@@ -1,4 +1,4 @@
-package graph;
+package comunidade;
 import java.util.*;
 import org.graphstream.graph.*;
 

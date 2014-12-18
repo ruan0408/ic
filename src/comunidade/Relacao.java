@@ -1,4 +1,4 @@
-package graph;
+package comunidade;
 
 public enum Relacao {
 	ATORE("ato-re"), 	AHIRO("ahi-ro"), 		KOKORE("koko-re"), 	HAHARE("haha-re"), 	MAMALO("mama-lo"), 

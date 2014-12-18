@@ -1,9 +1,9 @@
-package gui;
+package aparencia;
 
-import graph.CalculadorDeRelacoes;
-import java.awt.FlowLayout;
 import java.awt.*;
 import javax.swing.*;
+
+import comunidade.CalculadorDeRelacoes;
 
 //import org.graphstream.ui.swingViewer.View;
 //import org.graphstream.ui.swingViewer.Viewer;
@@ -57,7 +57,7 @@ public class Gui extends JFrame
 		
 		botaoIndividuos.addActionListener(new IndividuosHandler(this));
 		botaoCasamentos.addActionListener(new CasamentosHandler(this));
-		botaoConsulta.addActionListener(new ConsultHandler(this));
+		botaoConsulta.addActionListener(new ConsultasHandler(this));
 		
 		painelEntrada.add(botaoIndividuos);
 		painelEntrada.add(botaoCasamentos);

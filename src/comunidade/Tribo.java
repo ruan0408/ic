@@ -1,4 +1,4 @@
-package graph;
+package comunidade;
 
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;

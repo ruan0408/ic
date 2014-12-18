@@ -1,13 +1,14 @@
-package test;
+package teste;
 
 import static org.junit.Assert.*;
-import graph.CalculadorDeRelacoes;
-import graph.Tribo;
-import graph.TriboBuilder;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import comunidade.CalculadorDeRelacoes;
+import comunidade.Tribo;
+import comunidade.TriboBuilder;
 
 public class CalculadorDeRelacoesTest {
 

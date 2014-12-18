@@ -1,9 +1,6 @@
-package gui;
+package aparencia;
 
 
-import graph.CalculadorDeRelacoes;
-import graph.Tribo;
-import graph.TriboBuilder;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +8,10 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import comunidade.CalculadorDeRelacoes;
+import comunidade.Tribo;
+import comunidade.TriboBuilder;
 
 class IndividuosHandler implements ActionListener {	
 	

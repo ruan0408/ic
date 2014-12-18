@@ -1,4 +1,4 @@
-package graph;
+package comunidade;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
