@@ -33,6 +33,8 @@ class CasamentosHandler implements ActionListener {
 				
 				try {
 					TriboBuilder.adicionaCasamentos(calc.getTribo(), arquivoCasamentos);
+					//faz o calculador recalcular, pois agora casamentos foram adicionados
+					calc.setEstaCalculado(false);
 				} catch (NumberFormatException e) {
 					JOptionPane.showMessageDialog(null, 
 							"Arquivo fornecido está no formato errado!",

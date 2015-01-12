@@ -23,6 +23,11 @@ class ConsultasHandler implements ActionListener {
 				int egoId 	=	this.gui.getEgoId();
 				int alterId =	this.gui.getAlterId();
 				
+				if(this.gui.getMaxSubida() != calc.getMaxNivel()) {
+					calc.setMaxNivel(this.gui.getMaxSubida());
+					calc.setEstaCalculado(false);
+				}
+				
 				this.gui.mostraResposta(calc.getRelacao(egoId, alterId));	
 			}
 		}

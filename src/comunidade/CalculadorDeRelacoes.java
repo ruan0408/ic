@@ -17,6 +17,7 @@ public class CalculadorDeRelacoes {
 	private boolean estaCalculado;
 	private Map<Indio, Indio> anterior;
 	private Map<Indio, Integer>	 niveis;
+	private int maxNivel;
 	
 	public CalculadorDeRelacoes(Tribo tribo) {
 		this.tribo = tribo;
@@ -24,10 +25,20 @@ public class CalculadorDeRelacoes {
 		this.niveis = new HashMap<Indio, Integer>();
 		this.setRelacoes();
 		this.estaCalculado = false;
+		this.maxNivel = 4;
+	}
+	
+	public void setMaxNivel(int max) {
+		this.maxNivel = max;
+	}
+	
+	public int getMaxNivel() {
+		return this.maxNivel;
 	}
 	
 	public String getRelacao(int ego, int alter) {
 		if(!this.estaCalculado) {
+			this.limpaRelacoes();
 			this.calculaTodasAsRelacoes();
 			this.estaCalculado = true;
 		}
@@ -48,6 +59,10 @@ public class CalculadorDeRelacoes {
 	//Gambiarra...
 	public Tribo getTribo() {
 		return this.tribo;
+	}
+	
+	public void setEstaCalculado(boolean estaCalculado) {
+		this.estaCalculado = estaCalculado;
 	}
 	
 	private void calculaTodasAsRelacoes() {
@@ -154,16 +169,17 @@ public class CalculadorDeRelacoes {
 				else
 					System.out.println("Algo deu errado ao descer pelo eixo");
 				break;
-			case 2:
-			case 3:
+			default:
+			//case 2:
+			//case 3:
 				if(alter.eHomem())
 					this.addRelacao(ego, alter, Relacao.ATORE);
 				else
 					this.addRelacao(ego, alter, Relacao.AHIRO);
 				break;
-			default:
+			/*default:
 				if(this.niveis.get(alter) != 4)
-					System.out.println("Shouldn't happen");
+					System.out.println("Shouldn't happen");*/
 		}
 	}
 	
@@ -175,10 +191,11 @@ public class CalculadorDeRelacoes {
 		eixo.add(ego);
 		for(int i = 0; i < eixo.size(); i++) {
 			ancestral = eixo.get(i);
-			if(this.niveis.get(ancestral) > 3) continue;
+			//if(this.niveis.get(ancestral) > this.maxNivel) continue;
 			
 			for(Indio paiDoAncestral : ancestral.getPais()) {
 				
+				if(this.niveis.get(ancestral) + 1 > this.maxNivel) continue;
 				this.anterior.put(paiDoAncestral, ancestral);
 				this.niveis.put(paiDoAncestral, this.niveis.get(ancestral)+1);
 				classificaCosanguineos(ego, paiDoAncestral, false);//ancestrais são paralelos por definição
@@ -360,12 +377,16 @@ public class CalculadorDeRelacoes {
 	private void setRelacoes() {
 		int tam = tribo.getMaximoId();
 		this.relacoes = new String[tam+1][tam+1];
-		for (String[] row: this.relacoes)
-		    Arrays.fill(row, "");
+		this.limpaRelacoes();
 	}
 	
 	private void addRelacao(Indio ego, Indio alter, Relacao relacao) {
 		this.relacoes[ego.getNumero()][alter.getNumero()] += relacao.getNome()+" ";
+	}
+	
+	private void limpaRelacoes() {
+		for (String[] row: this.relacoes)
+		    Arrays.fill(row, "");
 	}
 
 }

@@ -15,11 +15,12 @@ public class Gui extends JFrame
 	private JButton botaoCasamentos;
 	private JTextField 	campoEgo;
 	private JTextField 	campoAlter;
+	private JTextField 	campoMaxSubida;
 	private JTextArea 	campoTexto;
 	private CalculadorDeRelacoes calc;
 	
 	public Gui() {
-		super("Projeto dos Enawene-nawe");
+		super("Calculador de relações para os Enawene-nawe");
 		super.setResizable(false);
 	}
 	
@@ -32,6 +33,7 @@ public class Gui extends JFrame
 		
 		this.campoEgo = new JTextField(6);
 		this.campoAlter = new JTextField(6);
+		this.campoMaxSubida = new JTextField(1);
 		this.campoTexto = new JTextArea(4,30);
 		this.campoTexto.setPreferredSize(new Dimension(4, 30));
 		this.campoTexto.setLineWrap(true);
@@ -66,6 +68,8 @@ public class Gui extends JFrame
 		painelEntrada.add(this.campoEgo);
 		painelEntrada.add(new JLabel("Alter:"));
 		painelEntrada.add(this.campoAlter);
+		painelEntrada.add(new JLabel("Max. Subida:"));
+		painelEntrada.add(this.campoMaxSubida);
 		
 		painelTexto.add(this.campoTexto);
 		
@@ -77,6 +81,15 @@ public class Gui extends JFrame
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setVisible(true);
+	}
+	
+	protected int getMaxSubida() {
+		int resp;
+		try {
+			resp = Integer.parseInt(this.campoMaxSubida.getText());
+		}
+		catch(Exception e) { resp = 3;}
+		return resp;
 	}
 	
 	protected JButton getBotaoIndividuos() {
